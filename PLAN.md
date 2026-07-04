@@ -4,6 +4,35 @@
 
 ---
 
+## 📊 Progress Tracker
+
+| Phase | Description | Status | Started | Done |
+|---|---|---|---|---|
+| **0 — Data Pipeline** | Python scripts: Compass CSV → features → .npz | 🟡 **In Progress** | ✅ | ⬜ |
+| **1 — Classic ML** | Train Random Forest, export ONNX | ⬜ | ⬜ | ⬜ |
+| **2 — Plugin Skeleton** | C++ qJointDetect loads ONNX, runs inference | ⬜ | ⬜ | ⬜ |
+| **3 — UI Polish** | Confidence slider, visualization controls | ⬜ | ⬜ | ⬜ |
+| **4 — Self-Training** | User corrections → retrain loop | ⬜ | ⬜ | ⬜ |
+| **5 — Deep Learning** | PointNet++ upgrade if needed | ⬜ | ⬜ | ⬜ |
+
+**Legend:** ✅ = Complete &nbsp; 🟡 = In Progress &nbsp; ⬜ = Not Started
+
+---
+
+## 🔧 Files Created So Far
+
+| File | Purpose | Phase |
+|---|---|---|
+| `PLAN.md` | This document | All |
+| `CSV_EXPORT_GUIDE.md` | Guide for geologists to export training data | 0 |
+| `scripts/extract_training_data.py` | Feature extraction from Compass CSVs | 0 |
+| `scripts/train_joint_model.py` | Train RF → export ONNX | 1 |
+| `plugins/core/Standard/qJointDetect/CMakeLists.txt` | Plugin build system | 2 |
+| `plugins/core/Standard/qJointDetect/info.json` | Plugin metadata | 2 |
+| `training_data/README.md` | Data directory structure | 0 |
+
+---
+
 ## 1. Why This Matters
 
 Geologists currently identify rock joints **manually** in CloudCompare:
@@ -210,14 +239,51 @@ This means:
 
 ## 6. Development Roadmap
 
-| Phase | Duration | Tasks | Output |
-|---|---|---|---|
-| **Phase 0: Data Pipeline** | Week 1 | Python script reads Compass CSVs, extracts labeled patches, saves NumPy arrays | `training_data.npz`, feature analysis notebook |
-| **Phase 1: Classic ML** | Weeks 2–3 | Train RF, evaluate, export to ONNX | `joint_rf_v1.onnx`, accuracy report |
-| **Phase 2: Plugin Skeleton** | Weeks 4–6 | C++ plugin loads ONNX, runs inference, creates `ccFitPlane` in DB tree | Working qJointDetect plugin |
-| **Phase 3: UI Polish** | Week 7 | Dialog for confidence threshold, region-growing params, visual feedback | Release v0.1 |
-| **Phase 4: Self-Training** | Week 8 | Export corrected CC projects back to training pipeline, automatic retraining | Self-improving system |
-| **Phase 5: Deep Learning** | Weeks 9–12 | PointNet++ integration if needed, multi-scan generalization | Release v1.0 |
+| Phase | Duration | Tasks | Output | Progress |
+|---|---|---|---|---|
+| **Phase 0: Data Pipeline** 🟡 | Week 1 | Python script reads Compass CSVs, extracts labeled patches, saves NumPy arrays | `training_data/dataset.npz`, feature analysis notebook | 🟡 Scripts written, waiting for CSV exports |
+| **Phase 1: Classic ML** ⬜ | Weeks 2–3 | Train RF, evaluate, export to ONNX | `joint_rf_v1.onnx`, accuracy report | ⬜ Ready to run when data arrives |
+| **Phase 2: Plugin Skeleton** ⬜ | Weeks 4–6 | C++ plugin loads ONNX, runs inference, creates `ccFitPlane` in DB tree | Working qJointDetect plugin | ⬜ CMake + info.json scaffolded |
+| **Phase 3: UI Polish** ⬜ | Week 7 | Dialog for confidence threshold, region-growing params, visual feedback | Release v0.1 | ⬜ |
+| **Phase 4: Self-Training** ⬜ | Week 8 | Export corrected CC projects back to training pipeline, automatic retraining | Self-improving system | ⬜ |
+| **Phase 5: Deep Learning** ⬜ | Weeks 9–12 | PointNet++ integration if needed, multi-scan generalization | Release v1.0 | ⬜ |
+
+### Phase 0 — Data Pipeline (🟡 In Progress)
+
+**What's done:**
+- [x] `scripts/extract_training_data.py` — reads Compass `*_planes.csv`, extracts geometric features per point (planarity, anisotropy, curvature, roughness, normal consistency, vertical gradient, density), saves as `.npz`
+- [x] `scripts/train_joint_model.py` — trains Random Forest classifier + orientation regressors, exports to ONNX for plugin use
+- [x] `CSV_EXPORT_GUIDE.md` — step-by-step guide for geologists
+- [x] `training_data/README.md` — data directory structure docs
+
+**What's next:**
+- [ ] Get Compass CSV exports from a real rock slope scan
+- [ ] Run `extract_training_data.py` on real data
+- [ ] Visualize feature distributions
+- [ ] Tune feature extraction parameters (k-neighbors, radius multiplier)
+
+### Phase 1 — Classic ML (⬜ Waiting for Data)
+
+- [ ] Run `train_joint_model.py` on extracted features
+- [ ] Evaluate classification accuracy (F1 score)
+- [ ] Evaluate orientation regression (MAE dip, MAE dip direction)
+- [ ] Check feature importance — which 3D properties matter most?
+- [ ] Export ONNX model to `plugins/.../models/joint_rf_v1.onnx`
+
+### Phase 2 — Plugin Skeleton (⬜ Waiting for Model)
+
+- [ ] Implement `JointFeatureExtractor.cpp` — C++ port of the feature extraction
+- [ ] Implement `JointMLClient.cpp` — ONNX Runtime inference wrapper
+- [ ] Implement `JointOutputManager.cpp` — region growing + RANSAC on predictions
+- [ ] Implement `ccJointDetectTool.cpp` — main tool UI
+- [ ] Wire up CMake with ONNX Runtime
+- [ ] Build and test in CloudCompare
+
+### Phase 3 — UI Polish (⬜)
+
+### Phase 4 — Self-Training (⬜)
+
+### Phase 5 — Deep Learning (⬜)
 
 ---
 
