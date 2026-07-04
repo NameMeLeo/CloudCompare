@@ -1,0 +1,10 @@
+{
+    "plugin_name": "qJointDetect",
+    "version": "0.1.0",
+    "description": "ML-powered rock joint detection plugin — uses Random Forest / PointNet++ trained on Compass-labeled data to identify joint surfaces from point clouds and compute dip angles.",
+    "authors": "Leo Choi / NameMeLeo",
+    "license": "GPL v2",
+    "icon": "icon.png",
+    "dependencies": ["qCompass (for export compatibility)"],
+    "cc_versions": [">=2.13"]
+}
